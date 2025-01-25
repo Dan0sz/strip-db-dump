@@ -46,9 +46,6 @@ class DaanStripDBDump {
 			$filename = substr( $filename, 0, - 4 );
 		}
 
-		// Add exclude tables based on the flags provided
-		$exclude_tables = [];
-
 		global $wpdb;
 
 		// Prepare conditional `--where` clauses for specific tables
