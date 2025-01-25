@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Daan - Strip DB Dump
  * Description: Adds shorthands in WP-CLI to easily create database dumps without sensitive data, i.e. customers, users and/or orders.
- * Version: 1.1.0
+ * Version: 1.0.0
  * Author: Daan from Daan.dev
  * License: GPLv2 or later
  */
