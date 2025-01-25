@@ -41,6 +41,11 @@ class DaanStripDBDump {
 		$strip_customers = isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 1 ] ] );
 		$strip_orders    = isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 2 ] ] );
 
+		// Strip the file extension, because we need to append numbering to the created files.
+		if ( str_contains( $filename, '.sql' ) ) {
+			$filename = substr( $filename, 0, - 4 );
+		}
+
 		// Add exclude tables based on the flags provided
 		$exclude_tables = [];
 
@@ -50,20 +55,20 @@ class DaanStripDBDump {
 		$tables_to_truncate = [];
 
 		if ( $strip_users ) {
-			$tables_to_truncate[ $wpdb->users ]    = '1 = 0'; // Excludes all rows but retains the structure
-			$tables_to_truncate[ $wpdb->usermeta ] = '1 = 0';
+			$tables_to_truncate[] = $wpdb->users;
+			$tables_to_truncate[] = $wpdb->usermeta;
 		}
 
 		if ( $strip_customers ) {
 			if ( class_exists( 'WooCommerce' ) ) {
-				$tables_to_truncate[ "{$wpdb->prefix}wc_customer_lookup" ] = '1 = 0'; // WooCommerce customers
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_customer_lookup";
 			}
 
 			if ( class_exists( 'Easy_Digital_Downloads' ) ) {
-				$tables_to_truncate[ "{$wpdb->prefix}edd_customers" ]                = '1 = 0'; // EDD customers
-				$tables_to_truncate[ "{$wpdb->prefix}edd_customermeta" ]             = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_customer_email_addresses" ] = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_customer_addresses" ]       = '1 = 0';
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_customers";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_customermeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_customer_email_addresses";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_customer_addresses";
 			}
 		}
 
@@ -71,65 +76,70 @@ class DaanStripDBDump {
 		if ( $strip_orders ) {
 			if ( class_exists( 'WooCommerce' ) ) {
 				// Exclude WooCommerce order tables
-				$tables_to_truncate[ "{$wpdb->prefix}wc_orders_meta" ]            = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_orders" ]                 = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_order_tax_lookup" ]       = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_order_stats" ]            = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_order_product_lookup" ]   = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_order_operational_data" ] = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_order_coupon_lookup" ]    = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_order_adresses" ]         = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_order_items" ]            = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}wc_order_itemmeta" ]         = '1 = 0';
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_orders_meta";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_orders";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_tax_lookup";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_stats";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_product_lookup";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_operational_data";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_coupon_lookup";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_adresses";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_items";
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_itemmeta";
 			}
 
 			if ( class_exists( 'Easy_Digital_Downloads' ) ) {
 				// Exclude EDD-related order tables
-				$tables_to_truncate[ "{$wpdb->prefix}edd_orders" ]               = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_ordermeta" ]            = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_order_transactions" ]   = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_order_items" ]          = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_order_itemmeta" ]       = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_order_adjustments" ]    = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_order_adjustmentmeta" ] = '1 = 0';
-				$tables_to_truncate[ "{$wpdb->prefix}edd_order_addresses" ]      = '1 = 0';
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_orders";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_ordermeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_transactions";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_items";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_itemmeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_adjustments";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_adjustmentmeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_addresses";
 			}
 
 			if ( empty( $tables_to_truncate ) ) {
 				WP_CLI::error(
-					'No tables specified for stripping data. Use --users, --customers, and/or --orders, otherwise just use wp db dump to make a full database export.'
+					'No tables specified for stripping data. Use --users, --customers, and/or --orders, otherwise just use wp db export to make a full database export.'
 				);
 
 				return;
 			}
 
-			// Build `--table` and `--where` options for wp-cli dump
-			$where_clauses = [];
-
-			foreach ( $tables_to_truncate as $table => $where ) {
-				$where_clauses[] = ' --tables=' . $table . ' --where=' . escapeshellarg( $where );
-			}
-
 			// Build the database dump command
-			$dump_command = 'db export ';
-
-			if ( $filename ) {
-				$dump_command .= $filename . ' ';
-			}
-
-			// Append WHERE conditions for reducing data in specified tables
-			$dump_command .= implode( ' ', $where_clauses );
+			$additional_args = '';
 
 			// Pass any additional arguments
 			foreach ( $assoc_args as $key => $value ) {
 				if ( ! in_array( $key, self::AVAILABLE_ASSOC_ARGS, true ) ) {
-					$dump_command .= " --{$key}=" . escapeshellarg( $value );
+					$additional_args .= " --{$key}=" . escapeshellarg( $value );
 				}
 			}
 
-			// Execute the command
-			WP_CLI::runcommand( $dump_command );
-			WP_CLI::success( 'Database dump completed with selected data stripped.' );
+			// Build first export, containing just the table that should maintain their data.
+			$all_tables         = $wpdb->get_results( 'SHOW TABLES', ARRAY_N );
+			$all_tables         = array_map( fn( $table_row ) => $table_row[ 0 ], $all_tables );
+			$tables_to_maintain = array_diff( $all_tables, $tables_to_truncate );
+			$tables_clause      = '--tables=' . implode( ',', $tables_to_maintain );
+
+			WP_CLI::runcommand( "db export $filename-1.sql $tables_clause $additional_args" );
+			WP_CLI::line( sprintf( 'First file created: %s', $filename . '-1.sql' ) );
+
+			// Now build the 2nd export, containing the tables that should be truncated, but maintain their structure.
+			$tables_clause = '--tables=' . implode( ',', $tables_to_truncate );
+			$where_clause  = '--where="1=0"';
+
+			WP_CLI::runcommand( "db export $filename-2.sql $tables_clause $where_clause $additional_args" );
+			WP_CLI::line( sprintf( 'Second file created: %s', $filename . '-2.sql' ) );
+			WP_CLI::success(
+				sprintf(
+					'Database exports were successfully created without the selected data. First import %s, followed by %s.',
+					$filename . '-1.sql',
+					$filename . '-2.sql'
+				)
+			);
 		}
 	}
 }
