@@ -1,9 +1,10 @@
 # WP-CLI Strip Database Dump
 
 This is a tiny plugin, which adds shorthands to WP-CLI which allows you to easily create database dumps and exclude
-sensitive data. It supports WooCommerce and Easy Digital Downloads.
+sensitive data. It supports AffiliateWP, Easy Digital Downloads, WooCommerce and WPForms.
 
-## How It Works
+> [!TIP]
+> If You want this plugin to support more 3rd party plugins, feel free to submit a pull request!
 
 The following options are available:
 

@@ -57,8 +57,14 @@ class DaanStripDBDump {
 		}
 
 		if ( $strip_customers ) {
-			if ( class_exists( 'WooCommerce' ) ) {
-				$tables_to_truncate[] = "{$wpdb->prefix}wc_customer_lookup";
+			if ( class_exists( 'Affiliate_WP' ) ) {
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_affiliates";
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_affiliatemeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_customers";
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_customermeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_lifetime_customers";
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_payouts";
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_visits";
 			}
 
 			if ( class_exists( 'Easy_Digital_Downloads' ) ) {
@@ -66,11 +72,49 @@ class DaanStripDBDump {
 				$tables_to_truncate[] = "{$wpdb->prefix}edd_customermeta";
 				$tables_to_truncate[] = "{$wpdb->prefix}edd_customer_email_addresses";
 				$tables_to_truncate[] = "{$wpdb->prefix}edd_customer_addresses";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_logs";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_logs_api_requestmeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_logs_api_requests";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_logs_emailmeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_logs_emails";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_logs_file_downloadmeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_logs_file_downloads";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_notemeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_notes";
+			}
+
+			if ( class_exists( 'WooCommerce' ) ) {
+				$tables_to_truncate[] = "{$wpdb->prefix}wc_customer_lookup";
+			}
+
+			if ( class_exists( 'WPForms' ) ) {
+				$tables_to_truncate[] = "{$wpdb->prefix}wpforms_entries";
+				$tables_to_truncate[] = "{$wpdb->prefix}wpforms_entry_fields";
+				$tables_to_truncate[] = "{$wpdb->prefix}wpforms_entry_meta";
 			}
 		}
 
 		// Exclude WooCommerce or EDD order data
 		if ( $strip_orders ) {
+			if ( class_exists( 'Affiliate_WP' ) ) {
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_referrals";
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_referralmeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}affiliate_wp_sales";
+			}
+
+			if ( class_exists( 'Easy_Digital_Downloads' ) ) {
+				// Exclude EDD-related order tables
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_orders";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_ordermeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_transactions";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_items";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_itemmeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_adjustments";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_adjustmentmeta";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_addresses";
+				$tables_to_truncate[] = "{$wpdb->prefix}edd_subscriptions";
+			}
+
 			if ( class_exists( 'WooCommerce' ) ) {
 				// Exclude WooCommerce order tables
 				$tables_to_truncate[] = "{$wpdb->prefix}wc_orders_meta";
@@ -85,16 +129,9 @@ class DaanStripDBDump {
 				$tables_to_truncate[] = "{$wpdb->prefix}wc_order_itemmeta";
 			}
 
-			if ( class_exists( 'Easy_Digital_Downloads' ) ) {
-				// Exclude EDD-related order tables
-				$tables_to_truncate[] = "{$wpdb->prefix}edd_orders";
-				$tables_to_truncate[] = "{$wpdb->prefix}edd_ordermeta";
-				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_transactions";
-				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_items";
-				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_itemmeta";
-				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_adjustments";
-				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_adjustmentmeta";
-				$tables_to_truncate[] = "{$wpdb->prefix}edd_order_addresses";
+			if ( class_exists( 'WPForms' ) ) {
+				$tables_to_truncate[] = "{$wpdb->prefix}wpforms_payments";
+				$tables_to_truncate[] = "{$wpdb->prefix}wpforms_payment_meta";
 			}
 
 			if ( empty( $tables_to_truncate ) ) {
@@ -122,14 +159,14 @@ class DaanStripDBDump {
 			$tables_clause      = '--tables=' . implode( ',', $tables_to_maintain );
 
 			WP_CLI::runcommand( "db export $filename-1.sql $tables_clause $additional_args" );
-			WP_CLI::line( sprintf( 'First file created: %s', $filename . '-1.sql' ) );
+			WP_CLI::success( sprintf( 'First file created: %s', $filename . '-1.sql' ) );
 
 			// Now build the 2nd export, containing the tables that should be truncated, but maintain their structure.
 			$tables_clause = '--tables=' . implode( ',', $tables_to_truncate );
 			$where_clause  = '--where="1=0"';
 
 			WP_CLI::runcommand( "db export $filename-2.sql $tables_clause $where_clause $additional_args" );
-			WP_CLI::line( sprintf( 'Second file created: %s', $filename . '-2.sql' ) );
+			WP_CLI::success( sprintf( 'Second file created: %s', $filename . '-2.sql' ) );
 			WP_CLI::success(
 				sprintf(
 					'Database exports were successfully created without the selected data. First import %s, followed by %s.',
@@ -137,6 +174,17 @@ class DaanStripDBDump {
 					$filename . '-2.sql'
 				)
 			);
+
+			if ( $strip_users ) {
+				WP_CLI::warning(
+					sprintf(
+						__(
+							'All users were stripped from the database, because the --users argument was used. Make sure you run %s after importing.'
+						),
+						'wp user create <username> <user-email> --role=administrator'
+					)
+				);
+			}
 		}
 	}
 }
