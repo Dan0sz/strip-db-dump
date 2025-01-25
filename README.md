@@ -1,7 +1,7 @@
 # WP-CLI Strip Database Dump
 
 This is a tiny plugin, which adds shorthands to WP-CLI which allows you to easily create database dumps and exclude
-sensitive data. It supports AffiliateWP, Easy Digital Downloads, WooCommerce and WPForms.
+sensitive data.
 
 > [!TIP]
 > If You want this plugin to support more 3rd party plugins, feel free to submit a pull request!
@@ -37,6 +37,15 @@ If no filename is provided, a random one will be generated and saved in WordPres
 > can
 > be done using the following
 > WP-CLI command: `wp user create username email@address.com --role=administrator`.
+
+## 3rd Party Plugin Support
+
+The plugin currently removes sensitive data (i.e. any data containing personal information) for the following plugins:
+
+* AffiliateWP
+* Easy Digital Downloads
+* WooCommerce
+* WPForms
 
 ## Installation
 
