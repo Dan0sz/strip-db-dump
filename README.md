@@ -37,3 +37,13 @@ If no filename is provided, a random one will be generated and saved in WordPres
 > can
 > be done using the following
 > WP-CLI command: `wp user create username email@address.com --role=administrator`.
+
+## Installation
+
+[Download the latest release](https://github.com/Dan0sz/strip-db-dump/releases/latest/download/daan-strip-db-dump.zip)
+from the Releases page (or click the link) and install it in WordPress:
+
+1. Navigate to your Administrator area,
+2. Go to Plugins >> Add New Plugin
+3. Click the Upload Plugin button in the top-left of the screen
+4. **Browse...** to the ZIP file and install it by clicking **Install Now**.
