@@ -14,10 +14,10 @@ jobs:
 
       - name: Generate plugin artifact
         run: |
-          mkdir -p release/wp-help-scout-docs
+          mkdir -p release/daan-strip-db-dump
           rsync -rc --exclude-from="$GITHUB_WORKSPACE/.distignore" "$GITHUB_WORKSPACE/" release/daan-strip-db-dump/ --delete --delete-excluded
           cd "${GITHUB_WORKSPACE}/release" || exit
-          zip -r "${GITHUB_WORKSPACE}/wp-help-scout-docs.zip" .
+          zip -r "${GITHUB_WORKSPACE}/daan-strip-db-dump.zip" .
 
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
@@ -25,6 +25,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{github.workspace}}/wp-help-scout-docs.zip
-          asset_name: wp-help-scout-docs.zip
+          asset_path: ${{github.workspace}}/daan-strip-db-dump.zip
+          asset_name: daan-strip-db-dump.zip
           asset_content_type: application/zip
