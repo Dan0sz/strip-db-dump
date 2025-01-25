@@ -159,14 +159,12 @@ class DaanStripDBDump {
 			$tables_clause      = '--tables=' . implode( ',', $tables_to_maintain );
 
 			WP_CLI::runcommand( "db export $filename-1.sql $tables_clause $additional_args" );
-			WP_CLI::success( sprintf( 'First file created: %s', $filename . '-1.sql' ) );
 
 			// Now build the 2nd export, containing the tables that should be truncated, but maintain their structure.
 			$tables_clause = '--tables=' . implode( ',', $tables_to_truncate );
 			$where_clause  = '--where="1=0"';
 
 			WP_CLI::runcommand( "db export $filename-2.sql $tables_clause $where_clause $additional_args" );
-			WP_CLI::success( sprintf( 'Second file created: %s', $filename . '-2.sql' ) );
 			WP_CLI::success(
 				sprintf(
 					'Database exports were successfully created without the selected data. First import %s, followed by %s.',
