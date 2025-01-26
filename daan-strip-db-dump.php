@@ -4,6 +4,7 @@
  * Description: Adds shorthands in WP-CLI to easily create database dumps without sensitive data, i.e. customers, users and/or orders.
  * Version: 1.0.1
  * Author: Daan from Daan.dev
+ * GitHub Plugin URI: Dan0sz/strip-db-dump
  * License: GPLv2 or later
  */
 
