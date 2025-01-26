@@ -7,9 +7,11 @@
 
 namespace Daan\StripDbDump;
 
+use WP_CLI;
+
 class Main {
 	const AVAILABLE_ASSOC_ARGS = [ 'users', 'customers', 'orders', 'all' ];
-	
+
 	/**
 	 * @return void
 	 */
