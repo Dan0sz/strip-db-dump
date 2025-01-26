@@ -9,7 +9,7 @@
  */
 
 class DaanStripDBDump {
-	const AVAILABLE_ASSOC_ARGS = [ 'users', 'customers', 'orders' ];
+	const AVAILABLE_ASSOC_ARGS = [ 'users', 'customers', 'orders', 'all' ];
 
 	/**
 	 * Initializes the class by hooking into the 'cli_init' action to register the CLI command.
@@ -37,10 +37,15 @@ class DaanStripDBDump {
 	 */
 	public function dump( $args, $assoc_args ) {
 		// Check and process additional parameters
-		$filename        = $args[ 1 ] ?? '';
-		$strip_users     = isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 0 ] ] );
-		$strip_customers = isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 1 ] ] );
-		$strip_orders    = isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 2 ] ] );
+		$filename = $args[ 1 ] ?? '';
+
+		if ( isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 3 ] ] ) ) {
+			$strip_users = $strip_customers = $strip_orders = true;
+		} else {
+			$strip_users     = isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 0 ] ] );
+			$strip_customers = isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 1 ] ] );
+			$strip_orders    = isset( $assoc_args[ self::AVAILABLE_ASSOC_ARGS[ 2 ] ] );
+		}
 
 		// Strip the file extension, because we need to append numbering to the created files.
 		if ( str_contains( $filename, '.sql' ) ) {
