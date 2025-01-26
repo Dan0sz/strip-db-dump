@@ -2,7 +2,7 @@
     "name": "daan/strip-db-dump",
     "description": "Adds shorthands in WP-CLI to easily create database dumps without sensitive data, i.e. customers, users and/or orders.",
     "type": "wordpress-plugin",
-    "license": "GPLv2 or later",
+    "license": "GPL-2.0-or-later",
     "autoload": {
         "psr-4": {
             "Daan\\StripDbDump\\": "src/"
