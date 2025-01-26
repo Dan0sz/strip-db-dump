@@ -6,8 +6,9 @@ sensitive data.
 The following options are available:
 
 - `--users`: excludes the `wp_users` and `wp_usermeta` tables.
-- `--customers`: excludes Customer related tables for WooCommerce and Easy Digital Downloads.
-- `--orders`: excludes Order related tables for WooCommerce and Easy Digital Downloads.
+- `--customers`: excludes Customer related tables for supported 3rd party plugins.
+- `--orders`: excludes Order related tables for supported 3rd party plugins.
+- `--all`: exclude all of the above.
 
 After running the command, 2 separate database exports are created:
 
@@ -24,8 +25,17 @@ run it as
 follows:
 
 ````
-wp strip-db dump ../stripped-db-dump --users --customers --orders
+wp strip-db dump ../stripped-db-dump.sql --all
 ````
+
+To just strip customer data and store the dump in the current directory, run:
+
+````
+wp strip-db dump stripped-dump --customers
+````
+
+> [!NOTE]
+> It's not required to append a file extension to the filename argument.
 
 If no filename is provided, a random one will be generated and saved in WordPress' root directory.
 
