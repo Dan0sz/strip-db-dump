@@ -68,6 +68,10 @@ class Main {
 			$filename = substr( $filename, 0, - 4 );
 		}
 
+		if ( ! $filename ) {
+			$filename = bin2hex( random_bytes( 3 ) );
+		}
+
 		// Prepare conditional `--where` clauses for specific tables
 		$tables_to_truncate = [];
 
