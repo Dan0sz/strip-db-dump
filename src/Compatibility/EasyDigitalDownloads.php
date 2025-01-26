@@ -7,13 +7,14 @@
 
 namespace Daan\StripDbDump\Compatibility;
 
-use Daan\StripDbDump\CompatibilityInterface;
+use Daan\StripDbDump\CustomersCompatibilityInterface;
+use Daan\StripDbDump\OrdersCompatibilityInterface;
 
-class EasyDigitalDownloads implements CompatibilityInterface {
+class EasyDigitalDownloads implements CustomersCompatibilityInterface, OrdersCompatibilityInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public static function get_order_tables() {
+	public static function get_orders_tables(): array {
 		return [
 			'edd_orders',
 			'edd_ordermeta',
@@ -30,7 +31,7 @@ class EasyDigitalDownloads implements CompatibilityInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public static function get_customer_tables() {
+	public static function get_customers_tables(): array {
 		return [
 			'edd_customers',
 			'edd_customermeta',

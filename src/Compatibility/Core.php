@@ -7,32 +7,16 @@
 
 namespace Daan\StripDbDump\Compatibility;
 
-use Daan\StripDbDump\CompatibilityInterface;
+use Daan\StripDbDump\UsersCompatibilityInterface;
 
-class Core implements CompatibilityInterface {
+class Core implements UsersCompatibilityInterface {
 	/**
-	 * Returns the User related tables for this compatibility fix.
-	 *
-	 * @return string[]
+	 * @inheritDoc
 	 */
-	public static function get_user_tables() {
+	public static function get_users_tables(): array {
 		return [
 			'users',
 			'usermeta',
 		];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function get_order_tables() {
-		return [];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function get_customer_tables() {
-		return [];
 	}
 }

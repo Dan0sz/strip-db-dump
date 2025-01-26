@@ -7,13 +7,14 @@
 
 namespace Daan\StripDbDump\Compatibility;
 
-use Daan\StripDbDump\CompatibilityInterface;
+use Daan\StripDbDump\CustomersCompatibilityInterface;
+use Daan\StripDbDump\OrdersCompatibilityInterface;
 
-class WooCommerce implements CompatibilityInterface {
+class WooCommerce implements CustomersCompatibilityInterface, OrdersCompatibilityInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public static function get_order_tables() {
+	public static function get_orders_tables(): array {
 		return [
 			'wc_orders_meta',
 			'wc_orders',
@@ -31,7 +32,7 @@ class WooCommerce implements CompatibilityInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public static function get_customer_tables() {
+	public static function get_customers_tables(): array {
 		return [
 			'wc_customer_lookup',
 		];

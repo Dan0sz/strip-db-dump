@@ -15,6 +15,9 @@ use Daan\StripDbDump\Compatibility\WooCommerce;
 use Daan\StripDbDump\Compatibility\WPForms;
 
 class Main {
+	/**
+	 * Available arguments for this tool.
+	 */
 	const AVAILABLE_ASSOC_ARGS = [ 'users', 'customers', 'orders', 'all' ];
 
 	/**
@@ -29,7 +32,7 @@ class Main {
 	 *
 	 * @return void
 	 */
-	private function init() {
+	private function init(): void {
 		add_action( 'cli_init', [ $this, 'register_cli_command' ] );
 	}
 
@@ -38,7 +41,7 @@ class Main {
 	 *
 	 * @return void
 	 */
-	public function register_cli_command() {
+	public function register_cli_command(): void {
 		WP_CLI::add_command( 'strip-db', [ $this, 'dump' ] );
 	}
 
@@ -48,7 +51,7 @@ class Main {
 	 * @param string[] $args       Positional arguments.
 	 * @param array    $assoc_args Associative arguments.
 	 */
-	public function dump( $args, $assoc_args ) {
+	public function dump( array $args, array $assoc_args ): void {
 		// Check and process additional parameters
 		$filename = $args[ 1 ] ?? '';
 
@@ -70,22 +73,25 @@ class Main {
 
 		if ( $strip_users ) {
 			foreach ( $this->get_users_compatibility_handlers() as $handler ) {
-				$tables_to_truncate = array_merge( $tables_to_truncate, $handler::get_user_tables() );
+				/** @var $handler UsersCompatibilityInterface */
+				$tables_to_truncate = array_merge( $tables_to_truncate, $handler::get_users_tables() );
 			}
 		}
 
 		if ( $strip_customers ) {
-			foreach ( $this->get_customer_compatibility_handlers() as $handler => $plugin_class ) {
+			foreach ( $this->get_customers_compatibility_handlers() as $handler => $plugin_class ) {
+				/** @var $handler CustomersCompatibilityInterface */
 				if ( class_exists( $plugin_class ) ) {
-					$tables_to_truncate = array_merge( $tables_to_truncate, $handler::get_customer_tables() );
+					$tables_to_truncate = array_merge( $tables_to_truncate, $handler::get_customers_tables() );
 				}
 			}
 		}
 
 		if ( $strip_orders ) {
-			foreach ( $this->get_order_compatibility_handlers() as $handler => $plugin_class ) {
+			foreach ( $this->get_orders_compatibility_handlers() as $handler => $plugin_class ) {
+				/** @var $handler OrdersCompatibilityInterface */
 				if ( class_exists( $plugin_class ) ) {
-					$tables_to_truncate = array_merge( $tables_to_truncate, $handler::get_order_tables() );
+					$tables_to_truncate = array_merge( $tables_to_truncate, $handler::get_orders_tables() );
 				}
 			}
 		}
@@ -151,7 +157,7 @@ class Main {
 	 *
 	 * @return array
 	 */
-	private function get_users_compatibility_handlers() {
+	private function get_users_compatibility_handlers(): array {
 		return [
 			Core::class,
 		];
@@ -162,7 +168,7 @@ class Main {
 	 *
 	 * @return array [ Name of Class that implements the CompatibilityInterface => Class to determine whether the plugin is active ]
 	 */
-	private function get_customer_compatibility_handlers() {
+	private function get_customers_compatibility_handlers(): array {
 		return [
 			AffiliateWP::class          => 'Affiliate_WP',
 			EasyDigitalDownloads::class => 'Easy_Digital_Downloads',
@@ -176,7 +182,7 @@ class Main {
 	 *
 	 * @return array [ Name of Class that implements the CompatibilityInterface => Class to determine whether the plugin is active ]
 	 */
-	private function get_order_compatibility_handlers() {
+	private function get_orders_compatibility_handlers(): array {
 		return [
 			AffiliateWP::class          => 'Affiliate_WP',
 			EasyDigitalDownloads::class => 'Easy_Digital_Downloads',

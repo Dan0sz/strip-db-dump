@@ -7,13 +7,14 @@
 
 namespace Daan\StripDbDump\Compatibility;
 
-use Daan\StripDbDump\CompatibilityInterface;
+use Daan\StripDbDump\CustomersCompatibilityInterface;
+use Daan\StripDbDump\OrdersCompatibilityInterface;
 
-class AffiliateWP implements CompatibilityInterface {
+class AffiliateWP implements CustomersCompatibilityInterface, OrdersCompatibilityInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public static function get_order_tables() {
+	public static function get_orders_tables(): array {
 		return [
 			'affiliate_wp_referrals',
 			'affiliate_wp_referralmeta',
@@ -24,7 +25,7 @@ class AffiliateWP implements CompatibilityInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public static function get_customer_tables() {
+	public static function get_customers_tables(): array {
 		return [
 			'affiliate_wp_affiliates',
 			'affiliate_wp_affiliatemeta',
