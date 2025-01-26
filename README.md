@@ -69,6 +69,6 @@ handlers in `Main` and you're ready to submit your PR! :-)
 from the Releases page (or click the link) and install it in WordPress:
 
 1. Navigate to your Administrator area,
-2. Go to Plugins >> Add New Plugin
-3. Click the Upload Plugin button in the top-left of the screen
+2. Go to Plugins >> **Add New Plugin**
+3. Click the **Upload Plugin** button in the top-left of the screen
 4. **Browse...** to the ZIP file and install it by clicking **Install Now**.
