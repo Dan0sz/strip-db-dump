@@ -3,9 +3,6 @@
 This is a tiny plugin, which adds shorthands to WP-CLI which allows you to easily create database dumps and exclude
 sensitive data.
 
-> [!TIP]
-> If You want this plugin to support more 3rd party plugins, feel free to submit a pull request!
-
 The following options are available:
 
 - `--users`: excludes the `wp_users` and `wp_usermeta` tables.
@@ -22,11 +19,12 @@ After running the command, 2 separate database exports are created:
 
 ### Usage
 
-To create a database that excludes all of the above and save it one directory up from the current directory, run it as
+To create a database that excludes orders, customers and users and save it one directory up from the current directory,
+run it as
 follows:
 
 ````
-wp strip-db dump [filename] --users --customers --orders
+wp strip-db dump ../stripped-db-dump --users --customers --orders
 ````
 
 If no filename is provided, a random one will be generated and saved in WordPress' root directory.
@@ -46,6 +44,9 @@ The plugin currently removes sensitive data (i.e. any data containing personal i
 * Easy Digital Downloads
 * WooCommerce
 * WPForms
+
+> [!TIP]
+> If You want this plugin to support more 3rd party plugins, feel free to submit a pull request!
 
 ## Installation
 
