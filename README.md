@@ -58,6 +58,11 @@ The plugin currently removes sensitive data (i.e. any data containing personal i
 > [!TIP]
 > If You want this plugin to support more 3rd party plugins, feel free to submit a pull request!
 
+As of v1.1.1 adding support for additional 3rd party plugins is easy. It's a matter of adding a class to
+`src/Compatibility` and implementing this plugin's `CompatibilityInterface` along with the required methods. Each method
+should return an array of corresponding table names **without prefix!** Then, add the new class to the corresponding
+handlers in `Main` and you're ready to submit your PR! :-)
+
 ## Installation
 
 [Download the latest release](https://github.com/Dan0sz/strip-db-dump/releases/latest/download/daan-strip-db-dump.zip)
