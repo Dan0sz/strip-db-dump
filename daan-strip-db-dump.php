@@ -5,6 +5,7 @@
  * Version: 1.1.1
  * Author: Daan from Daan.dev
  * GitHub Plugin URI: Dan0sz/strip-db-dump
+ * Primary Branch: main
  * License: GPLv2 or later
  */
 
