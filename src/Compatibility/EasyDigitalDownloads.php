@@ -16,6 +16,9 @@ class EasyDigitalDownloads implements CustomersCompatibilityInterface, OrdersCom
 	 */
 	public static function get_orders_tables(): array {
 		return [
+			'edd_license_activations',
+			'edd_licenses',
+			'edd_licensemeta',
 			'edd_orders',
 			'edd_ordermeta',
 			'edd_order_transactions',
