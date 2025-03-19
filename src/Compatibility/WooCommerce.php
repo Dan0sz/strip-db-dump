@@ -23,7 +23,7 @@ class WooCommerce implements CustomersCompatibilityInterface, OrdersCompatibilit
 			'wc_order_product_lookup',
 			'wc_order_operational_data',
 			'wc_order_coupon_lookup',
-			'wc_order_adresses',
+			'wc_order_addresses',
 			'wc_order_items',
 			'wc_order_itemmeta',
 		];
